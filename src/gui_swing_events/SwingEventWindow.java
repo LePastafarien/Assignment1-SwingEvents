@@ -1,44 +1,115 @@
 package gui_swing_events;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
-public class SwingEventWindow extends JFrame {
-    /*
-     * Adding the class instances:
-     */
-    // Just declaring all the components to be used in the JFrame:
-    // Create JPanel container object:
-    JPanel pnl = new JPanel();
+public class SwingEventWindow extends JFrame implements ActionListener, ItemListener {
 
-    /*
-     * Creating the Constructor method to specify the Swing Window Requirements
-     * and adding JPanel object to the JFrame
-     * The constructor should include statements
-     * to set these minimum requirements:
-     */
+    int rdoChecked = 1;
+
+    JPanel pnlMain = new JPanel();
+    JPanel pnl1 = new JPanel();
+    JPanel pnl2 = new JPanel();
+    JPanel pnl3 = new JPanel();
+    JPanel pnl4 = new JPanel();
+    JPanel pnl5 = new JPanel();
+    JPanel pnl6 = new JPanel();
+
+    JLabel lblMain = new JLabel("Excel Functions");
+
+    JLabel lblRequest = new JLabel("Enter your numbers separated by spaces");
+
+    JTextField txtNum = new JTextField(30);
+
+    JRadioButton rdoAutoSum = new JRadioButton("Auto Sum", true);
+    JRadioButton rdoAverage = new JRadioButton("Average");
+    JRadioButton rdoMax = new JRadioButton("Maximum");
+    JRadioButton rdoMin = new JRadioButton("Minimum");
+
+    JButton btnCalc = new JButton("Calculate");
+
+    JLabel lblResult = new JLabel("Result:");
+
+    JTextField txtResult = new JTextField(15);
+
+    ButtonGroup rdBtnGrp = new ButtonGroup();
 
     public SwingEventWindow() {
-        // we used => new JFrame("the window title")
-        // we don't use this syntax: JFrame frame = new JFrame("Title");
-        // since we extended the JFrame Class
-        // instead, we use super() method:
-        /*
-         * Passing the String title
-         * to the inherited super() method
-         * of the the "JFrame" class
-         */
         super("GUI Swing Window");
-        // The other way of adding a title:
         setTitle("GUI Swing Window");
 
-        // instead of using the object "frame" => frame.setSize(500, 200);
-        setSize(500, 200);
-        // instead frame.setVisible(true);
+        setSize(500, 300);
         setVisible(true);
-        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // Adding the JPanel object to the JFrame:
-        add(pnl);
-    } // end constructor
+
+        rdBtnGrp.add(rdoAutoSum);
+        rdBtnGrp.add(rdoAverage);
+        rdBtnGrp.add(rdoMax);
+        rdBtnGrp.add(rdoMin);
+
+        pnl1.add(lblMain);
+        pnl2.add(lblRequest);
+        pnl3.add(txtNum);
+        pnl4.add(rdoAutoSum);
+        pnl4.add(rdoAverage);
+        pnl4.add(rdoMax);
+        pnl4.add(rdoMin);
+        pnl5.add(btnCalc);
+        pnl6.add(lblResult);
+        pnl6.add(txtResult);
+
+        pnlMain.add(pnl1);
+        pnlMain.add(pnl2);
+        pnlMain.add(pnl3);
+        pnlMain.add(pnl4);
+        pnlMain.add(pnl5);
+        pnlMain.add(pnl6);
+
+        GridLayout layout = new GridLayout(6 ,1);
+
+        pnlMain.setLayout(layout);
+
+        getContentPane().add(pnlMain);
+
+        btnCalc.addActionListener(this);
+        rdoAutoSum.addItemListener(this);
+        rdoAverage.addItemListener(this);
+        rdoMax.addItemListener(this);
+        rdoMin.addItemListener(this);
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e){
+        if (e.getItemSelectable() == rdoAutoSum) {
+            rdoChecked = 1;
+        } else if (e.getItemSelectable() == rdoAverage) {
+            rdoChecked = 2;
+        } else if (e.getItemSelectable() == rdoMax) {
+            rdoChecked = 3;
+        } else if (e.getItemSelectable() == rdoMin) {
+            rdoChecked = 4;
+        }
+    }
+
+     @Override
+    public void actionPerformed(ActionEvent e){
+        String StrNum = txtNum.getText();
+
+        Excel excel = new Excel(StrNum);
+
+        if (rdoChecked == 1) {
+            txtResult.setText(String.valueOf(excel.FindTotal()));
+        } else if (rdoChecked == 2) {
+            txtResult.setText(String.valueOf(excel.FindAvg()));;
+        } else if (rdoChecked == 3) {
+            txtResult.setText(String.valueOf(excel.FindMax()));;
+        } else if (rdoChecked == 4) {
+            txtResult.setText(String.valueOf(excel.FindMin()));;
+        }
+
+    }
 }
